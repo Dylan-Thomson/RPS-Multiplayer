@@ -12,6 +12,7 @@
 
   /********************************************************
    * PSEUDOCODE:
+   * // instructor mentioned keeping track of time passed for this
    * 1. First player connects and is assigned to player 1
    *    -Maybe ask them to provide a name
    *    -At this point they can't do anything except maybe type in chat
