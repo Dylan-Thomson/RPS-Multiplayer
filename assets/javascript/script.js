@@ -10,6 +10,59 @@
   firebase.initializeApp(config);
   const database = firebase.database();
 
+  function initializeDatabaseData() {
+    database.ref().set({
+      players: {
+        player1: {
+          name: "",
+          move: "",
+          score: 0
+        },
+        player2: {
+          name: "",
+          move: "",
+          score: 0
+        }
+      }
+    });
+    database.ref().once("value").then((snapshot) => {
+      console.log(snapshot.val().players);
+    });
+  }
+
+
+
+  $(document).ready(() => {
+    initializeDatabaseData();
+
+    $("#submit-name").on("click", (event) => {
+      event.preventDefault();
+
+      // Set player1 name first, otherwise set player2
+      database.ref().once("value").then((snapshot) => { 
+        if(!snapshot.val().players.player1.name) {
+          database.ref("players/player1").set({
+            name: $("#input-player-name").val(),
+            move: "",
+            score: 0
+          });
+        }
+        else if(!snapshot.val().players.player2.name) {
+          database.ref("players/player2").set({
+            name: $("#input-player-name").val(),
+            move: "",
+            score: 0
+          });
+        }
+        $("#input-player-name").val("");
+      });
+    });
+
+    database.ref().on("value", (snapshot) => {
+      console.log(snapshot.val().players);
+    });
+  });
+
   /********************************************************
    * PSEUDOCODE:
    * // instructor mentioned keeping track of time passed for this
