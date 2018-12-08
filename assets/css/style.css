@@ -1,3 +1,13 @@
 h1 {
     color: red;
 }
+
+#player-1-area, #player-2-area, #results-area {
+    border: 2px solid black;
+    min-height: 25vh;
+}
+
+#chat-box {
+    min-height: 30vh;
+    border: 1px solid grey;
+}
