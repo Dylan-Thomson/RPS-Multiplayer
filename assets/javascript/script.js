@@ -41,8 +41,10 @@
         let con = connectionsRef.push({timestamp: firebase.database.ServerValue.TIMESTAMP});
         connectionsRef.orderByChild("timestamp").limitToLast(1).once("value").then(snapshot => {
           console.log("our connection", snapshot.val());
-          thisConnection = snapshot.val();
+          thisConnection = Object.keys(snapshot.val())[0];
         });
+
+        // TODO remove player for this connection
         con.onDisconnect().remove();
       }
     });
@@ -53,7 +55,7 @@
   }
 
   $(document).ready(() => {
-    // initializeDatabaseData();
+    initializeDatabaseData();
     handleConnections();
 
     $("#submit-name").on("click", (event) => {
@@ -65,14 +67,16 @@
           database.ref("players/player1").set({
             name: $("#input-player-name").val(),
             move: "",
-            score: 0
+            score: 0,
+            id: thisConnection
           });
         }
         else if(!snapshot.val().player2.name) {
           database.ref("players/player2").set({
             name: $("#input-player-name").val(),
             move: "",
-            score: 0
+            score: 0,
+            id: thisConnection
           });
         }
         $("#input-player-name").val("");
