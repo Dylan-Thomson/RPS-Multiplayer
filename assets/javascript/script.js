@@ -29,11 +29,22 @@
       console.log(snapshot.val().players);
     });
   }
-
-
+  
+  function handleConnections() {
+    const connectionsRef = database.ref("/connections");
+    const connectedRef = database.ref(".info/connected");
+    connectedRef.on("value", (snapshot) => {
+      if(snapshot.val()) {
+        let con = connectionsRef.push(true);
+        con.onDisconnect().remove();
+      }
+      // console.log(snapshot.val());
+    });
+  }
 
   $(document).ready(() => {
-    initializeDatabaseData();
+    // initializeDatabaseData();
+    handleConnections();
 
     $("#submit-name").on("click", (event) => {
       event.preventDefault();
@@ -64,13 +75,6 @@
     });
 
 
-    database.ref(".info/connected").on("value", (snapshot) => {
-      if(snapshot.val()) {
-        let con = database.ref("/connections").push(true);
-        con.onDisconnect().remove();
-      }
-      // console.log(snapshot.val());
-    });
   });
 
   /********************************************************
