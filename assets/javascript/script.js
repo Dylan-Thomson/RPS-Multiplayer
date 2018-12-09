@@ -30,15 +30,25 @@
     });
   }
   
+  // Object.keys(thisConnection)[0]
+  let thisConnection;
+
   function handleConnections() {
     const connectionsRef = database.ref("/connections");
     const connectedRef = database.ref(".info/connected");
     connectedRef.on("value", (snapshot) => {
       if(snapshot.val()) {
-        let con = connectionsRef.push(true);
+        let con = connectionsRef.push({timestamp: firebase.database.ServerValue.TIMESTAMP});
+        connectionsRef.orderByChild("timestamp").limitToLast(1).once("value").then(snapshot => {
+          console.log("our connection", snapshot.val());
+          thisConnection = snapshot.val();
+        });
         con.onDisconnect().remove();
       }
-      // console.log(snapshot.val());
+    });
+
+    connectionsRef.on("value", (snapshot) => {
+      console.log("connections", snapshot.val());
     });
   }
 
@@ -69,9 +79,9 @@
       });
     });
 
-    database.ref().on("value", (snapshot) => {
-      console.log(snapshot.val().players);
-      console.log(snapshot.val().connections);
+    database.ref("players").on("value", (snapshot) => {
+      console.log("new player data", snapshot.val());
+      // console.log(snapshot.val().connections);
     });
 
 
