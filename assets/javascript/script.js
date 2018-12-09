@@ -26,12 +26,13 @@
       }
     });
     database.ref().once("value").then((snapshot) => {
-      console.log(snapshot.val().players);
+      console.log("CLEARING DATABASE", snapshot.val().players);
     });
   }
   
-  // Object.keys(thisConnection)[0]
-  let thisConnection;
+  // Object.keys(connection)[0]
+  let connection;
+  let player;
 
   function handleConnections() {
     const connectionsRef = database.ref("/connections");
@@ -41,7 +42,7 @@
         let con = connectionsRef.push({timestamp: firebase.database.ServerValue.TIMESTAMP});
         connectionsRef.orderByChild("timestamp").limitToLast(1).once("value").then(snapshot => {
           console.log("our connection", snapshot.val());
-          thisConnection = Object.keys(snapshot.val())[0];
+          connection = Object.keys(snapshot.val())[0];
         });
 
         // TODO remove player for this connection
@@ -49,26 +50,35 @@
       }
     });
 
-    connectionsRef.on("value", (snapshot) => {
-      console.log("connections", snapshot.val());
+    connectionsRef.on("child_removed", (snapshot) => {
+      // console.log("Disconnected", snapshot.val());
+      database.ref("players").once("value").then((snapshot) => {
+        
+      });
     });
   }
 
   $(document).ready(() => {
-    initializeDatabaseData();
+    // initializeDatabaseData();
     handleConnections();
 
     $("#submit-name").on("click", (event) => {
       event.preventDefault();
 
       // Set player1 name first, otherwise set player2
+      player = {
+        name: $("#input-player-name").val(),
+        move: "",
+        score: 0,
+        id: connection
+      };
       database.ref("players").once("value").then((snapshot) => { 
         if(!snapshot.val().player1.name) {
           database.ref("players/player1").set({
             name: $("#input-player-name").val(),
             move: "",
             score: 0,
-            id: thisConnection
+            id: connection
           });
         }
         else if(!snapshot.val().player2.name) {
@@ -76,7 +86,7 @@
             name: $("#input-player-name").val(),
             move: "",
             score: 0,
-            id: thisConnection
+            id: connection
           });
         }
         $("#input-player-name").val("");
