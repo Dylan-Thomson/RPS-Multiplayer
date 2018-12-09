@@ -10,26 +10,6 @@
   firebase.initializeApp(config);
   const database = firebase.database();
 
-  function initializeDatabaseData() {
-    database.ref().set({
-      players: {
-        player1: {
-          name: "",
-          move: "",
-          score: 0
-        },
-        player2: {
-          name: "",
-          move: "",
-          score: 0
-        }
-      }
-    });
-    database.ref().once("value").then((snapshot) => {
-      console.log("CLEARING DATABASE", snapshot.val().players);
-    });
-  }
-  
   // Object.keys(connection)[0]
   let connection;
   let playerData;
@@ -37,6 +17,40 @@
 
   // TODO STORE AND UPDATE PLAYERS LOCALLY AND UPDATE DATABASE USING THAT
   let players;
+
+  function handlePlayerData() {
+    database.ref("players").once("value").then((snapshot) => {
+      if(snapshot.exists()) {
+        players = snapshot.val();
+      }
+      else {
+        database.ref().set({
+          players: {
+            player1: {
+              name: "",
+              move: "",
+              score: 0,
+              id: ""
+            },
+            player2: {
+              name: "",
+              move: "",
+              score: 0,
+              id: ""
+            }
+          }
+        });
+      }
+      // console.log("CLEARING DATABASE", snapshot.val().players);
+    });
+
+    database.ref().on("value", (snapshot) => {
+      console.log(snapshot.val());
+      players = snapshot.val().players;
+    });
+
+  }
+  
 
   function handleConnections() {
     const connectionsRef = database.ref("/connections");
@@ -82,7 +96,7 @@
   }
 
   $(document).ready(() => {
-    // initializeDatabaseData();
+    handlePlayerData();
     handleConnections();
 
     $("#submit-name").on("click", (event) => {
