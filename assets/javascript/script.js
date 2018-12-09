@@ -39,15 +39,15 @@
       event.preventDefault();
 
       // Set player1 name first, otherwise set player2
-      database.ref().once("value").then((snapshot) => { 
-        if(!snapshot.val().players.player1.name) {
+      database.ref("players").once("value").then((snapshot) => { 
+        if(!snapshot.val().player1.name) {
           database.ref("players/player1").set({
             name: $("#input-player-name").val(),
             move: "",
             score: 0
           });
         }
-        else if(!snapshot.val().players.player2.name) {
+        else if(!snapshot.val().player2.name) {
           database.ref("players/player2").set({
             name: $("#input-player-name").val(),
             move: "",
@@ -60,6 +60,16 @@
 
     database.ref().on("value", (snapshot) => {
       console.log(snapshot.val().players);
+      console.log(snapshot.val().connections);
+    });
+
+
+    database.ref(".info/connected").on("value", (snapshot) => {
+      if(snapshot.val()) {
+        let con = database.ref("/connections").push(true);
+        con.onDisconnect().remove();
+      }
+      // console.log(snapshot.val());
     });
   });
 
