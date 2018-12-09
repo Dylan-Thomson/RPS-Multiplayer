@@ -32,7 +32,11 @@
   
   // Object.keys(connection)[0]
   let connection;
+  let playerData;
   let player;
+
+  // TODO STORE AND UPDATE PLAYERS LOCALLY AND UPDATE DATABASE USING THAT
+  let players;
 
   function handleConnections() {
     const connectionsRef = database.ref("/connections");
@@ -51,10 +55,29 @@
     });
 
     connectionsRef.on("child_removed", (snapshot) => {
-      // console.log("Disconnected", snapshot.val());
-      database.ref("players").once("value").then((snapshot) => {
-        
+      console.log("Disconnected", snapshot.key);
+      const key = snapshot.key;
+      database.ref("players").once("value").then((snapshot) =>{
+        console.log(snapshot.val());
+        Object.values(snapshot.val()).forEach((player) => {
+          console.log(player.id, key, player);
+          if(player.id === key) {
+            console.log("deleting", player.name);
+            database.ref("players").orderByChild("id").equalTo(key).removeValue();
+            // database.ref("players").orderByChild("id").equalTo(key).once("value").then((snapshot) => {
+            //   // console.log("DUDE", snapshot.remove());
+            // });
+
+          }
+        });
       });
+      // console.log("players/" + player);
+      // database.ref("players/" + player).set({
+      //   name: "",
+      //   move: "",
+      //   score: 0,
+      //   id: ""
+      // });
     });
   }
 
@@ -66,7 +89,7 @@
       event.preventDefault();
 
       // Set player1 name first, otherwise set player2
-      player = {
+      playerData = {
         name: $("#input-player-name").val(),
         move: "",
         score: 0,
