@@ -39,15 +39,27 @@ class RockPaperScissors {
     this.database.ref("players").on("value", (snapshot) => {
       if(snapshot.child("player1").exists()) {
         this.player1 = snapshot.val().player1;
+        $("#player-1-name").text(this.player1.name);
       }
       else {
         this.player1 = null;
       }
       if(snapshot.child("player2").exists()) {
         this.player2 = snapshot.val().player2;
+        $("#player-2-name").text(this.player2.name);
       }
       else {
         this.player2 = null;
+      }
+    });
+
+    this.database.ref("players").on("child_removed", (snapshot) => {
+      console.log(snapshot.val().name, "has disconnected");
+      if($("#player-1-name").text() === snapshot.val().name) {
+        $("#player-1-name").text("Player 1");
+      }
+      else {
+        $("#player-2-name").text("Player 2");
       }
     });
   }
@@ -62,6 +74,7 @@ class RockPaperScissors {
         losses: 0,
         ties: 0
       }
+      $("#player-1-name").text(name);
       this.database.ref("players/player1").set(this.player1);
       this.database.ref("players/player1").onDisconnect().remove();
     }
@@ -74,6 +87,7 @@ class RockPaperScissors {
         losses: 0,
         ties: 0
       }
+      $("#player-2-name").text(name);
       this.database.ref("players/player2").set(this.player2);
       this.database.ref("players/player2").onDisconnect().remove();
     }
