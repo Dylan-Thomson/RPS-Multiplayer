@@ -2,7 +2,7 @@ h1 {
     color: red;
 }
 
-#player-1-area, #player-2-area, #results-area {
+#player1-area, #player2-area, #results-area {
     border: 2px solid black;
     min-height: 25vh;
 }
