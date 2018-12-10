@@ -21,10 +21,79 @@
  * Players: {player1: "dylan", player2: "tom"}
  * Moves: {player1: "rock", player2: "paper"}
  * 
- * player1 {name: "dylan", move: "rock", score: 0}
+ * player1 {name: "dylan", move: "rock", wins: 0, ties: 0, losses: 0}
 ********************************************************/
 
-console.log(database);
+// console.log(database);
+
+class RockPaperScissors {
+  constructor(database) {
+    this.database = database;
+  }
+
+  run() {
+    this.handlePlayerData();
+  }
+
+  handlePlayerData() {
+    this.database.ref("players").on("value", (snapshot) => {
+      if(snapshot.child("player1").exists()) {
+        this.player1 = snapshot.val().player1;
+      }
+      else {
+        this.player1 = null;
+      }
+      if(snapshot.child("player2").exists()) {
+        this.player2 = snapshot.val().player2;
+      }
+      else {
+        this.player2 = null;
+      }
+    });
+  }
+
+  addPlayer(name) {
+    if(!this.player1) {
+      console.log("Adding", name, "as player1");
+      this.player1 = {
+        name: name,
+        move: "",
+        wins: 0,
+        losses: 0,
+        ties: 0
+      }
+      this.database.ref().child("players/player1").set(this.player1);
+      this.database.ref("players/player1").onDisconnect().remove();
+    }
+    else if(!this.player2) {
+      console.log("Adding", name, "as player2");
+      this.player2 = {
+        name: name,
+        move: "",
+        wins: 0,
+        losses: 0,
+        ties: 0
+      }
+      this.database.ref().child("players/player2").set(this.player2);
+      this.database.ref("players/player2").onDisconnect().remove();
+    }
+  }
+
+}
+
+let game = new RockPaperScissors(database);
+$(document).ready(()=> {
+  game.run();
+
+  $("#submit-name").on("click", (event) => {
+    event.preventDefault();
+    const name = $("#input-player-name").val().trim();
+    if(name !== "") {
+      game.addPlayer(name);
+    }
+    $("#input-player-name").val("");
+  });
+});
 
   // // Object.keys(connection)[0]
   // let connection;
