@@ -75,6 +75,7 @@ class RockPaperScissors {
         ties: 0
       }
       $("#player-1-name").text(name);
+      $("#player-1-buttons").removeClass("d-none");
       this.database.ref("players/player1").set(this.player1);
       this.database.ref("players/player1").onDisconnect().remove();
     }
@@ -88,6 +89,7 @@ class RockPaperScissors {
         ties: 0
       }
       $("#player-2-name").text(name);
+      $("#player-2-buttons").removeClass("d-none");
       this.database.ref("players/player2").set(this.player2);
       this.database.ref("players/player2").onDisconnect().remove();
     }
