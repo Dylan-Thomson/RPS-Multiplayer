@@ -62,7 +62,7 @@ class RockPaperScissors {
         losses: 0,
         ties: 0
       }
-      this.database.ref().child("players/player1").set(this.player1);
+      this.database.ref("players/player1").set(this.player1);
       this.database.ref("players/player1").onDisconnect().remove();
     }
     else if(!this.player2) {
@@ -74,7 +74,7 @@ class RockPaperScissors {
         losses: 0,
         ties: 0
       }
-      this.database.ref().child("players/player2").set(this.player2);
+      this.database.ref("players/player2").set(this.player2);
       this.database.ref("players/player2").onDisconnect().remove();
     }
   }
