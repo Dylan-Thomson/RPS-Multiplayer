@@ -14,9 +14,15 @@ class RockPaperScissors {
       // Get player data if there is any
       if(snapshot.child("player1").exists()) {
         $("#player1-name").text(snapshot.val().player1.name);
+        $("#player1-wins").text(snapshot.val().player1.wins);
+        $("#player1-losses").text(snapshot.val().player1.losses);
+        $("#player1-ties").text(snapshot.val().player1.ties);
       }
       if(snapshot.child("player2").exists()) {
         $("#player2-name").text(snapshot.val().player2.name);
+        $("#player2-wins").text(snapshot.val().player2.wins);
+        $("#player2-losses").text(snapshot.val().player2.losses);
+        $("#player2-ties").text(snapshot.val().player2.ties);
       }
 
       // Check for moves and compare if both have moved
