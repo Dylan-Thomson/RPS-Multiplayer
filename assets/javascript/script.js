@@ -49,12 +49,15 @@ class RockPaperScissors {
     this.database.ref("players").once("value").then((snapshot) => {
       if(!snapshot.val()) {
         this.addPlayer(name, "player1");
+        this.player = "player1";
       }
       else if(!snapshot.val().player1) {
         this.addPlayer(name, "player1");
+        this.player = "player1";
       }
       else if(!snapshot.val().player2) {
         this.addPlayer(name, "player2");
+        this.player = "player2";
       }
     });
   }
@@ -78,7 +81,7 @@ class RockPaperScissors {
     const db = this.database;
     $("." + player + "-move").on("click", function() {
       // Update player move
-      const update = {};
+      let update = {};
       update["players/" + player + "/move"] = $(this).data("move");
       db.ref().update(update);
       console.log(name + " picked " + $(this).data("move"));
@@ -95,7 +98,8 @@ class RockPaperScissors {
     move1 = this.moves.indexOf(move1);
     move2 = this.moves.indexOf(move2);
     if(move1 == move2) {
-      console.log("Tie");
+      // console.log("Tie");
+      this.tie();
     }
     else if(move1 == this.moves.length - 1 && move2 == 0) {
       console.log("Player 2 wins"); // s vs r
@@ -111,10 +115,20 @@ class RockPaperScissors {
     }
   }
 
-  tie(player) {
-    const update = {};
-    update["players/" + player + "/ties"] += 1;
-    this.database.ref().update(update);
+  tie() {
+    this.database.ref("players").once("value").then((snapshot) => {
+      let player1Ties = Number(snapshot.val().player1.ties);
+      let player2Ties = Number(snapshot.val().player2.ties);
+      player1Ties++, player2Ties++;
+      console.log("TIED", player1Ties, player2Ties);
+      let updates = {};
+      updates["players/player1/ties"] = player1Ties;
+      updates["players/player1/move"] = "";
+      updates["players/player2/ties"] = player2Ties;
+      updates["players/player2/move"] = "";
+      $("#" + this.player + "-buttons").removeClass("d-none");
+      this.database.ref().update(updates);
+    });
   }
 
 }
