@@ -43,9 +43,15 @@ class RockPaperScissors {
       console.log(snapshot.val().name, "has disconnected");
       if($("#player1-name").text() === snapshot.val().name) {
         $("#player1-name").text("Player 1");
+        $("#player1-wins").text("");
+        $("#player1-losses").text("");
+        $("#player1-ties").text("");
       }
       else {
         $("#player2-name").text("Player 2");
+        $("#player2-wins").text("");
+        $("#player2-losses").text("");
+        $("#player2-ties").text("");
       }
     });
   }
