@@ -56,13 +56,24 @@ class RockPaperScissors {
     }
     $("#" + player + "-name").text(name);
     $("#" + player + "-buttons").removeClass("d-none");
+    
+    const db = this.database;
+    $("." + player + "-move").on("click", function() {
+      // Update player move
+      const update = {};
+      update["players/" + player + "/move"] = $(this).data("move");
+      db.ref().update(update);
+
+      // Hide buttons
+      $("#" + player + "-buttons").addClass("d-none");
+    });
     this.database.ref("players/" + player).set(this[player]);
     this.database.ref("players/" + player).onDisconnect().remove();
   }
 
 }
 
-let game = new RockPaperScissors(database);
+const game = new RockPaperScissors(database);
 $(document).ready(()=> {
   game.run();
 
