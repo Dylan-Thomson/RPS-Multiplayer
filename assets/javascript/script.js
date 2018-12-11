@@ -13,29 +13,21 @@ class RockPaperScissors {
     this.database.ref("players").on("value", (snapshot) => {
       // Get player data if there is any
       if(snapshot.child("player1").exists()) {
-        this.player1 = snapshot.val().player1;
-        $("#player1-name").text(this.player1.name);
-      }
-      else {
-        this.player1 = null;
+        $("#player1-name").text(snapshot.val().player1.name);
       }
       if(snapshot.child("player2").exists()) {
-        this.player2 = snapshot.val().player2;
-        $("#player2-name").text(this.player2.name);
-      }
-      else {
-        this.player2 = null;
+        $("#player2-name").text(snapshot.val().player2.name);
       }
 
       // Check for moves and compare if both have moved
       if(snapshot.child("player1").exists() && snapshot.child("player2").exists()) {
-        if(this.player1.move && this.player2.move) {
+        if(snapshot.child("player1").val().move && snapshot.child("player2").val().move) {
           console.log("Both players have moved");
-          console.log("Player1 move: " + this.player1.move);
-          console.log("Player2 move: " + this.player2.move);
+          console.log("Player1 move: " + snapshot.child("player1").val().move);
+          console.log("Player2 move: " + snapshot.child("player2").val().move);
 
           // evaluate moves
-          this.evalMoves();
+          this.evalMoves(snapshot.child("player1").val().move, snapshot.child("player2").val().move);
         }
       }
     });
@@ -54,18 +46,23 @@ class RockPaperScissors {
 
   // Decide what to do when a user submits a name
   submitName(name) {
-    if(!this.player1) {
-      this.addPlayer(name, "player1");
-    }
-    else if(!this.player2) {
-      this.addPlayer(name, "player2");
-    }
+    this.database.ref("players").once("value").then((snapshot) => {
+      if(!snapshot.val()) {
+        this.addPlayer(name, "player1");
+      }
+      else if(!snapshot.val().player1) {
+        this.addPlayer(name, "player1");
+      }
+      else if(!snapshot.val().player2) {
+        this.addPlayer(name, "player2");
+      }
+    });
   }
 
   // Adding a player
   addPlayer(name, player) {
     console.log("Adding", name, "as", player);
-    this[player] = {
+    const newPlayer = {
       name: name,
       move: "",
       wins: 0,
@@ -84,27 +81,26 @@ class RockPaperScissors {
       const update = {};
       update["players/" + player + "/move"] = $(this).data("move");
       db.ref().update(update);
-
+      console.log(name + " picked " + $(this).data("move"));
       // Hide buttons
       $("#" + player + "-buttons").addClass("d-none");
     });
 
     // Update database with player data and set to remove on disconnect
-    this.database.ref("players/" + player).set(this[player]);
+    this.database.ref("players/" + player).set(newPlayer);
     this.database.ref("players/" + player).onDisconnect().remove();
   }
 
-  evalMoves() {
-    console.log(this.player1.move + " vs " + this.player2.move);
-    const move1 = this.moves.indexOf(this.player1.move);
-    const move2 = this.moves.indexOf(this.player2.move);
-    if(move1 === move2) {
+  evalMoves(move1, move2) {
+    move1 = this.moves.indexOf(move1);
+    move2 = this.moves.indexOf(move2);
+    if(move1 == move2) {
       console.log("Tie");
     }
-    else if(move1 === this.moves.length - 1 && move2 === 0) {
+    else if(move1 == this.moves.length - 1 && move2 == 0) {
       console.log("Player 2 wins"); // s vs r
     }
-    else if(move2 === this.moves.length - 1 && move1 === 0) {
+    else if(move2 == this.moves.length - 1 && move1 == 0) {
       console.log("Player 1 wins"); // r vs s
     }
     else if(move1 > move2) {
@@ -113,6 +109,12 @@ class RockPaperScissors {
     else {
       console.log("Player 2 wins"); // r vs p or p vs s
     }
+  }
+
+  tie(player) {
+    const update = {};
+    update["players/" + player + "/ties"] += 1;
+    this.database.ref().update(update);
   }
 
 }
