@@ -98,20 +98,23 @@ class RockPaperScissors {
     move1 = this.moves.indexOf(move1);
     move2 = this.moves.indexOf(move2);
     if(move1 == move2) {
-      // console.log("Tie");
       this.tie();
     }
     else if(move1 == this.moves.length - 1 && move2 == 0) {
       console.log("Player 2 wins"); // s vs r
+      this.winLose("player2", "player1");
     }
     else if(move2 == this.moves.length - 1 && move1 == 0) {
       console.log("Player 1 wins"); // r vs s
+      this.winLose("player1", "player2");
     }
     else if(move1 > move2) {
       console.log("Player 1 wins"); // p vs r or s vs p
+      this.winLose("player1", "player2");
     }
     else {
       console.log("Player 2 wins"); // r vs p or p vs s
+      this.winLose("player2", "player1");
     }
   }
 
@@ -126,8 +129,26 @@ class RockPaperScissors {
       updates["players/player1/move"] = "";
       updates["players/player2/ties"] = player2Ties;
       updates["players/player2/move"] = "";
-      $("#" + this.player + "-buttons").removeClass("d-none");
       this.database.ref().update(updates);
+      $("#" + this.player + "-buttons").removeClass("d-none");
+    });
+  }
+  
+  winLose(winner, loser) {
+    this.database.ref("players").once("value").then((snapshot) => {
+      console.log(snapshot.val()[winner].name, "won!");
+      console.log(snapshot.val()[loser].name, "lost!");
+      let winnerWins = Number(snapshot.val()[winner].wins);
+      winnerWins++;
+      let loserLosses = Number(snapshot.val()[loser].losses);
+      loserLosses++;
+      let updates = {};
+      updates["players/" + winner + "/wins"] = winnerWins;
+      updates["players/" + loser + "/losses"] = loserLosses;
+      updates["players/player1/move"] = "";
+      updates["players/player2/move"] = "";
+      this.database.ref().update(updates);
+      $("#" + this.player + "-buttons").removeClass("d-none");
     });
   }
 
