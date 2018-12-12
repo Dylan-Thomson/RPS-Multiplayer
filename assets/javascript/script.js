@@ -6,6 +6,7 @@ class RockPaperScissors {
 
   run() {
     this.handlePlayerData();
+    this.handleChatData();
   }
 
   handlePlayerData() {
@@ -40,6 +41,9 @@ class RockPaperScissors {
           this.evalMoves(snapshot.child("player1").val().move, snapshot.child("player2").val().move);
         }
       }
+      else {
+        this.database.ref("chat").remove();
+      }
     });
 
     // Handle player disconnect
@@ -58,6 +62,37 @@ class RockPaperScissors {
         $("#player2-ties").text("");
       }
     });
+  }
+
+  handleChatData() {
+    this.database.ref("chat").on("child_added", (snapshot) => {
+      console.log(snapshot.val().msg);
+      $("#chatbox").append($("<div>").text(
+        snapshot.val().name + ": " + snapshot.val().msg
+      ));
+    });
+    // this.database.ref("chat").on("value", (snapshot) => {
+    //   const chatlogLength = Object.keys(snapshot.val()).length;
+    //   if(chatlogLength > 25) {
+    //     // this.database.ref("chat").orderByChild("added").limitToLast(1).once;
+    //   }
+    //   // console.log(Object.keys(snapshot.val()).length);
+    // });
+  }
+
+  submitChatMessage(msg) {
+    // console.log(msg);
+    if(this.player) {
+      this.database.ref().once("value").then((snapshot) => {
+          let chatMessage = {
+            name: snapshot.val().players[this.player].name,
+            msg: msg,
+            added: firebase.database.ServerValue.TIMESTAMP
+          };
+          // console.log(chatMessage.name, chatMessage.msg);
+          this.database.ref("chat").push(chatMessage);
+      });
+    }
   }
 
   // Decide what to do when a user submits a name
@@ -216,5 +251,14 @@ $(document).ready(()=> {
       game.submitName(name);
     }
     $("#input-player-name").val("");
+  });
+
+  $("#send-chat-msg").on("click", (event) => {
+    event.preventDefault();
+    const msg = $("#input-chat-msg").val().trim();
+    if(msg !== "") {
+      game.submitChatMessage(msg);
+    }
+    $("#input-chat-msg").val("");
   });
 });

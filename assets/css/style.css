@@ -7,7 +7,8 @@ h1 {
     min-height: 25vh;
 }
 
-#chat-box {
-    min-height: 30vh;
+#chatbox {
+    height: 30vh;
     border: 1px solid grey;
+    overflow-y: scroll;
 }
