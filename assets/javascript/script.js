@@ -30,6 +30,10 @@ class RockPaperScissors {
         if(snapshot.child("player1").val().move && snapshot.child("player2").val().move) {
           console.log("Both players have moved");
           console.log("Player1 move: " + snapshot.child("player1").val().move);
+          $("#player1-move").removeClass();
+          $("#player2-move").removeClass();
+          $("#player1-move").addClass("far fa-3x " + this.iconFromMove(snapshot.child("player1").val().move));
+          $("#player2-move").addClass("far fa-3x " + this.iconFromMove(snapshot.child("player2").val().move));
           console.log("Player2 move: " + snapshot.child("player2").val().move);
 
           // evaluate moves
@@ -153,8 +157,10 @@ class RockPaperScissors {
       this.database.ref().update(updates);
 
       $("#result").text("Tie!");
+      $("#player-moves").removeClass("d-none");
       setTimeout(() => {
         $("#" + this.player + "-buttons").removeClass("d-none");
+        $("#player-moves").addClass("d-none");
         $("#result").empty();
       }, 3000);
     });
@@ -174,14 +180,27 @@ class RockPaperScissors {
       updates["players/player1/move"] = "";
       updates["players/player2/move"] = "";
       this.database.ref().update(updates);
-      // $("#results-area").append($("<h2>").text(snapshot.val()[winner].name + " won!"));
+      
       $("#result").text(snapshot.val()[winner].name + " won!");
+      $("#player-moves").removeClass("d-none");
       setTimeout(() => {
         $("#" + this.player + "-buttons").removeClass("d-none");
+        $("#player-moves").addClass("d-none");
         $("#result").empty();
       }, 3000);
-      // $("#" + this.player + "-buttons").removeClass("d-none");
     });
+  }
+
+  iconFromMove(move) {
+    if(move === "r") {
+      return "fa-hand-rock";
+    }
+    if(move === "p") {
+      return "fa-hand-paper";
+    }
+    if(move === "s") {
+      return "fa-hand-scissors"
+    }
   }
 
 }
