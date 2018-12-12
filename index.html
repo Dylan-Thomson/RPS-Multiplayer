@@ -22,8 +22,8 @@
     <div class="container">
         <h1 class="text-center">Rock Paper Scissors</h1>
         <form class="text-center" id="name-form">
-            <input id="input-player-name" type="text" placeholder="Name">
-            <button class="btn" id="submit-name">Start</button>
+            <input id="input-player-name" type="text" placeholder="Name" maxlength="10">
+            <button class="btn" id="submit-name">Join</button>
         </form>
         <div class="d-none" id="player-selection-container">
             <h2 class="m-0 text-center">You are <span id="player-selection"></span></h2>
@@ -72,10 +72,10 @@
             </div>
         </div>
         <div class="col-md-6 mx-auto my-3" id="chat-container">
-            <div id="chatbox"></div>
+            <div class="p-1" id="chatbox"></div>
             <form class="w-100">
                 <div class="form-group">
-                    <input class="form-control" id="input-chat-msg" type="text">
+                    <input class="form-control" id="input-chat-msg" type="text" placeholder="Message">
                     <button class="btn" id="send-chat-msg">Send</button>
                 </div>
             </form>
