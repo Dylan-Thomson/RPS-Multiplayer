@@ -28,6 +28,10 @@ class RockPaperScissors {
 
       // Check for moves and compare if both have moved
       if(snapshot.child("player1").exists() && snapshot.child("player2").exists()) {
+        if(this.spectator) {
+          $("#name-form").addClass("d-none");
+          $("#player-selection-container").removeClass("d-none");
+        }
         if(snapshot.child("player1").val().move && snapshot.child("player2").val().move) {
           console.log("Both players have moved");
           console.log("Player1 move: " + snapshot.child("player1").val().move);
