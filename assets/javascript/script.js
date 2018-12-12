@@ -151,7 +151,12 @@ class RockPaperScissors {
       updates["players/player2/ties"] = player2Ties;
       updates["players/player2/move"] = "";
       this.database.ref().update(updates);
-      $("#" + this.player + "-buttons").removeClass("d-none");
+
+      $("#result").text("Tie!");
+      setTimeout(() => {
+        $("#" + this.player + "-buttons").removeClass("d-none");
+        $("#result").empty();
+      }, 3000);
     });
   }
   
@@ -169,7 +174,13 @@ class RockPaperScissors {
       updates["players/player1/move"] = "";
       updates["players/player2/move"] = "";
       this.database.ref().update(updates);
-      $("#" + this.player + "-buttons").removeClass("d-none");
+      // $("#results-area").append($("<h2>").text(snapshot.val()[winner].name + " won!"));
+      $("#result").text(snapshot.val()[winner].name + " won!");
+      setTimeout(() => {
+        $("#" + this.player + "-buttons").removeClass("d-none");
+        $("#result").empty();
+      }, 3000);
+      // $("#" + this.player + "-buttons").removeClass("d-none");
     });
   }
 
