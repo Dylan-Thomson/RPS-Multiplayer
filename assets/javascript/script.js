@@ -49,6 +49,12 @@ class RockPaperScissors {
     // Handle player disconnect
     this.database.ref("players").on("child_removed", (snapshot) => {
       console.log(snapshot.val().name, "has disconnected");
+      let chatMessage = {
+        name: snapshot.val().name,
+        msg: "has disconnected",
+        added: firebase.database.ServerValue.TIMESTAMP
+      }
+      this.database.ref("chat").push(chatMessage);
       if($("#player1-name").text() === snapshot.val().name) {
         $("#player1-name").text("Player 1");
         $("#player1-wins").text("");
@@ -70,6 +76,9 @@ class RockPaperScissors {
       $("#chatbox").append($("<div>").text(
         snapshot.val().name + ": " + snapshot.val().msg
       ));
+      $("#chatbox").animate({
+        scrollTop: $("#chatbox").get(0).scrollHeight
+      }, 100);
     });
     // this.database.ref("chat").on("value", (snapshot) => {
     //   const chatlogLength = Object.keys(snapshot.val()).length;
@@ -148,6 +157,14 @@ class RockPaperScissors {
       // Hide buttons
       $("#" + player + "-buttons").addClass("d-none");
     });
+
+    let chatMessage = {
+      name: name,
+      msg: "has joined",
+      added: firebase.database.ServerValue.TIMESTAMP
+    }
+
+    this.database.ref("chat").push(chatMessage);
 
     // Update database with player data and set to remove on disconnect
     this.database.ref("players/" + player).set(newPlayer);
