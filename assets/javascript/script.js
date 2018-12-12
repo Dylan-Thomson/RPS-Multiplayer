@@ -62,14 +62,23 @@ class RockPaperScissors {
       if(!snapshot.val()) {
         this.addPlayer(name, "player1");
         this.player = "player1";
+        $("#name-form").addClass("d-none");
+        $("#player-selection-container").removeClass("d-none");
+        $("#player-selection").text(this.player);
       }
       else if(!snapshot.val().player1) {
         this.addPlayer(name, "player1");
         this.player = "player1";
+        $("#name-form").addClass("d-none");
+        $("#player-selection-container").removeClass("d-none");
+        $("#player-selection").text(this.player);
       }
       else if(!snapshot.val().player2) {
         this.addPlayer(name, "player2");
         this.player = "player2";
+        $("#name-form").addClass("d-none");
+        $("#player-selection-container").removeClass("d-none");
+        $("#player-selection").text(this.player);
       }
     });
   }
