@@ -42,6 +42,7 @@ class RockPaperScissors {
         }
       }
       else {
+        // For now, clear chat if both players leave
         this.database.ref("chat").remove();
       }
     });
@@ -49,12 +50,16 @@ class RockPaperScissors {
     // Handle player disconnect
     this.database.ref("players").on("child_removed", (snapshot) => {
       console.log(snapshot.val().name, "has disconnected");
+
+      // Add chat message saying playing disconnected
       let chatMessage = {
         name: snapshot.val().name,
         msg: "has disconnected",
         added: firebase.database.ServerValue.TIMESTAMP
       }
       this.database.ref("chat").push(chatMessage);
+
+      // Clear stats on page
       if($("#player1-name").text() === snapshot.val().name) {
         $("#player1-name").text("Player 1");
         $("#player1-wins").text("");
@@ -70,6 +75,7 @@ class RockPaperScissors {
     });
   }
 
+  // Append a div to chatbox when message is added, auto scroll to bottom
   handleChatData() {
     this.database.ref("chat").on("child_added", (snapshot) => {
       console.log(snapshot.val().msg);
@@ -80,17 +86,10 @@ class RockPaperScissors {
         scrollTop: $("#chatbox").get(0).scrollHeight
       }, 100);
     });
-    // this.database.ref("chat").on("value", (snapshot) => {
-    //   const chatlogLength = Object.keys(snapshot.val()).length;
-    //   if(chatlogLength > 25) {
-    //     // this.database.ref("chat").orderByChild("added").limitToLast(1).once;
-    //   }
-    //   // console.log(Object.keys(snapshot.val()).length);
-    // });
   }
 
+  // Push new chat message to database
   submitChatMessage(msg) {
-    // console.log(msg);
     if(this.player) {
       this.database.ref().once("value").then((snapshot) => {
           let chatMessage = {
@@ -98,7 +97,6 @@ class RockPaperScissors {
             msg: msg,
             added: firebase.database.ServerValue.TIMESTAMP
           };
-          // console.log(chatMessage.name, chatMessage.msg);
           this.database.ref("chat").push(chatMessage);
       });
     }
@@ -158,12 +156,12 @@ class RockPaperScissors {
       $("#" + player + "-buttons").addClass("d-none");
     });
 
+    // Add chat message when player joins
     let chatMessage = {
       name: name,
       msg: "has joined",
       added: firebase.database.ServerValue.TIMESTAMP
     }
-
     this.database.ref("chat").push(chatMessage);
 
     // Update database with player data and set to remove on disconnect
@@ -171,6 +169,7 @@ class RockPaperScissors {
     this.database.ref("players/" + player).onDisconnect().remove();
   }
 
+  // Compare player moves and determine win/loss/tie
   evalMoves(move1, move2) {
     move1 = this.moves.indexOf(move1);
     move2 = this.moves.indexOf(move2);
@@ -195,12 +194,13 @@ class RockPaperScissors {
     }
   }
 
+  // Increment ties for each player, announce result, start new round
   tie() {
     this.database.ref("players").once("value").then((snapshot) => {
       let player1Ties = Number(snapshot.val().player1.ties);
       let player2Ties = Number(snapshot.val().player2.ties);
       player1Ties++, player2Ties++;
-      console.log("TIED", player1Ties, player2Ties);
+      console.log("TIED");
       let updates = {};
       updates["players/player1/ties"] = player1Ties;
       updates["players/player1/move"] = "";
@@ -218,6 +218,7 @@ class RockPaperScissors {
     });
   }
   
+  // Update win/loss stats for each player, announce result, start new round
   winLose(winner, loser) {
     this.database.ref("players").once("value").then((snapshot) => {
       console.log(snapshot.val()[winner].name, "won!");
@@ -243,6 +244,7 @@ class RockPaperScissors {
     });
   }
 
+  // Return fontawesome class given a move
   iconFromMove(move) {
     if(move === "r") {
       return "fa-hand-rock";
