@@ -41,9 +41,14 @@ class RockPaperScissors {
           this.evalMoves(snapshot.child("player1").val().move, snapshot.child("player2").val().move);
         }
       }
-      else {
+      else if(this.spectator && (snapshot.child("player1").exists() || snapshot.child("player2").exists())) {
+        $("#name-form").removeClass("d-none");
+        $("#player-selection-container").addClass("d-none");
+      }
+      else if(!snapshot.child("player1").exists() && !snapshot.child("player2").exists()){
         // For now, clear chat if both players leave
         this.database.ref("chat").remove();
+        $("#chatbox").empty();
       }
     });
 
@@ -52,12 +57,14 @@ class RockPaperScissors {
       console.log(snapshot.val().name, "has disconnected");
 
       // Add chat message saying playing disconnected
-      let chatMessage = {
-        name: snapshot.val().name,
-        msg: "has disconnected",
-        added: firebase.database.ServerValue.TIMESTAMP
+      if(!this.spectator) {
+        let chatMessage = {
+          name: snapshot.val().name,
+          msg: "has disconnected",
+          added: firebase.database.ServerValue.TIMESTAMP
+        }
+        this.database.ref("chat").push(chatMessage);
       }
-      this.database.ref("chat").push(chatMessage);
 
       // Clear stats on page
       if($("#player1-name").text() === snapshot.val().name) {
@@ -100,6 +107,14 @@ class RockPaperScissors {
           this.database.ref("chat").push(chatMessage);
       });
     }
+    else if(this.spectator) {
+      let chatMessage = {
+        name: this.spectator,
+        msg: msg,
+        added: firebase.database.ServerValue.TIMESTAMP
+      };
+      this.database.ref("chat").push(chatMessage);
+    }
   }
 
   // Decide what to do when a user submits a name
@@ -110,21 +125,27 @@ class RockPaperScissors {
         this.player = "player1";
         $("#name-form").addClass("d-none");
         $("#player-selection-container").removeClass("d-none");
-        $("#player-selection").text(this.player);
+        $("#player-selection").text("Player 1");
       }
       else if(!snapshot.val().player1) {
         this.addPlayer(name, "player1");
         this.player = "player1";
         $("#name-form").addClass("d-none");
         $("#player-selection-container").removeClass("d-none");
-        $("#player-selection").text(this.player);
+        $("#player-selection").text("Player 1");
       }
       else if(!snapshot.val().player2) {
         this.addPlayer(name, "player2");
         this.player = "player2";
         $("#name-form").addClass("d-none");
         $("#player-selection-container").removeClass("d-none");
-        $("#player-selection").text(this.player);
+        $("#player-selection").text("Player 2");
+      }
+      else {
+        this.spectator = name;
+        $("#name-form").addClass("d-none");
+        $("#player-selection-container").removeClass("d-none");
+        $("#player-selection").text("spectating");
       }
     });
   }
