@@ -61,7 +61,7 @@ class RockPaperScissors {
       console.log(snapshot.val().name, "has disconnected");
 
       // Add chat message saying playing disconnected
-      if(!this.spectator) {
+      if(this.player) {
         let chatMessage = {
           name: snapshot.val().name,
           msg: "has disconnected",
