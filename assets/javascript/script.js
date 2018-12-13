@@ -37,8 +37,8 @@ class RockPaperScissors {
           console.log("Player1 move: " + snapshot.child("player1").val().move);
           $("#player1-move").removeClass();
           $("#player2-move").removeClass();
-          $("#player1-move").addClass("far fa-3x " + this.iconFromMove(snapshot.child("player1").val().move));
-          $("#player2-move").addClass("far fa-3x " + this.iconFromMove(snapshot.child("player2").val().move));
+          $("#player1-move").addClass("text-warning fas fa-2x " + this.iconFromMove(snapshot.child("player1").val().move));
+          $("#player2-move").addClass("text-warning fas fa-2x " + this.iconFromMove(snapshot.child("player2").val().move));
           console.log("Player2 move: " + snapshot.child("player2").val().move);
 
           // evaluate moves

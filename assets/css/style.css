@@ -1,15 +1,13 @@
-h1 {
-    color: red;
-}
+
 
 #player1-area, #player2-area, #results-area {
-    border: 2px solid black;
+    /* border: 2px solid black; */
     min-height: 25vh;
 }
 
 #chatbox {
     height: 30vh;
-    border: 1px solid grey;
+    /* border: 1px solid grey; */
     overflow-y: scroll;
     overflow-x: none;
 }
@@ -17,3 +15,7 @@ h1 {
 /* #input-chat-msg {
     width: 85%;
 } */
+
+i {
+    /* color: black; */
+}

@@ -18,14 +18,14 @@
     <script src="assets/javascript/config.js"></script>
     <script src="assets/javascript/script.js"></script>
 </head>
-<body>
+<body class="bg-dark text-light">
     <div class="container">
         <div class="row">
             <div class="col-md-6 mx-auto my-3 p-0 text-center">
                 <h1 class="text-center my-3">Rock Paper Scissors</h1>
                 <form class="my-3 form-inline" id="name-form">
                     <div class="form-row justify-content-center mx-auto">
-                        <input class="form-control col-9" id="input-player-name" type="text" placeholder="Name" maxlength="10">
+                        <input class="form-control col-9 bg-secondary text-light" id="input-player-name" type="text" placeholder="Name" maxlength="10">
                         <button class="btn btn-primary col-auto mx-1" id="submit-name">Join</button>
                     </div>
                 </form>
@@ -36,52 +36,52 @@
         </div>
         <div class="row">
             <div class="col-md-4">
-                <div class="m-1 d-flex flex-column justify-content-center" id="player1-area">
+                <div class="my-2 d-flex flex-column justify-content-center border border-light bg-secondary" id="player1-area">
                     <h2 class="text-center mb-3" id="player1-name">Player 1</h2>
                     <div class="text-center mb-3" id="player1-stats">
                         Wins: <span id="player1-wins"></span> Losses: <span id="player1-losses"></span> Ties: <span id="player1-ties"></span>
                     </div>
                     <div class="d-none" id="player1-buttons">
                         <div class="d-flex justify-content-around">
-                            <i id="player1-rock" class="player1-move far fa-3x fa-hand-rock" data-move="r"></i>
-                            <i id="player1-paper" class="player1-move far fa-3x fa-hand-paper" data-move="p"></i>
-                            <i id="player1-scissors" class="player1-move far fa-3x fa-hand-scissors" data-move="s"></i>
+                            <i id="player1-rock" class="player1-move text-warning fas fa-2x fa-hand-rock" data-move="r"></i>
+                            <i id="player1-paper" class="player1-move text-warning fas fa-2x fa-hand-paper" data-move="p"></i>
+                            <i id="player1-scissors" class="player1-move text-warning fas fa-2x fa-hand-scissors" data-move="s"></i>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="m-1 d-flex flex-column justify-content-center" id="results-area">
+                <div class="my-2 d-flex flex-column justify-content-center border border-light bg-secondary" id="results-area">
                     <h2 class="text-center" id="result"></h2>
                     <div class="d-none text-center" id="player-moves">
                         <div class="d-flex justify-content-around">
-                            <i id="player1-move"></i>
-                            <i id="player2-move"></i>
+                            <i class="text-warning" id="player1-move"></i>
+                            <i class="text-warning" id="player2-move"></i>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="m-1 d-flex flex-column justify-content-center" id="player2-area">
+                <div class="my-2 d-flex flex-column justify-content-center border border-light bg-secondary" id="player2-area">
                     <h2 class="text-center mb-3" id="player2-name">Player 2</h2>
                     <div class="text-center mb-3" id="player2-stats">
                         Wins: <span id="player2-wins"></span> Losses: <span id="player2-losses"></span> Ties: <span id="player2-ties"></span>
                     </div>
                     <div class="d-none" id="player2-buttons">
                         <div class="d-flex justify-content-around">
-                            <i id="player2-rock" class="player2-move far fa-3x fa-hand-rock" data-move="r"></i>
-                            <i id="player2-paper" class="player2-move far fa-3x fa-hand-paper" data-move="p"></i>
-                            <i id="player2-scissors" class="player2-move far fa-3x fa-hand-scissors" data-move="s"></i>
+                            <i id="player2-rock" class="player2-move text-warning fas fa-2x fa-hand-rock" data-move="r"></i>
+                            <i id="player2-paper" class="player2-move text-warning fas fa-2x fa-hand-paper" data-move="p"></i>
+                            <i id="player2-scissors" class="player2-move text-warning fas fa-2x fa-hand-scissors" data-move="s"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-6 mx-auto my-3 p-0" id="chat-container">
-            <div class="p-1" id="chatbox"></div>
+            <div class="p-1 border border-light bg-secondary" id="chatbox"></div>
             <form class="form-inline">
                 <div class="form-row justify-content-center w-100 my-3">
-                    <input class="form-control col-9" id="input-chat-msg" type="text" placeholder="Message">
+                    <input class="form-control col-9 bg-secondary text-light" id="input-chat-msg" type="text" placeholder="Message">
                     <button class="btn btn-primary col-auto mx-1" id="send-chat-msg">Send</button>
                 </div>
             </form>
