@@ -1,4 +1,7 @@
 # RPS-Multiplayer
+
+[Live Site](https://dylan-thomson.github.io/RPS-Multiplayer/)
+
 When a user visits the web page, they can enter their name to join as a player if a spot is open.
 
 Players can choose rock, paper, or scissors. When both players have picked a move, the result is determined. The result and the players' moves are displayed for a few seconds, then the players can each choose another move.
